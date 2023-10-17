@@ -47,13 +47,14 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+// Changed this from '/login' to '/'
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/dashboard',
-  failureRedirect: '/login'
+  failureRedirect: '/'
 }));
 
 app.post('/register', (req, res) => {
@@ -64,7 +65,7 @@ app.post('/register', (req, res) => {
       console.error(err);
       return res.status(500).send("Server Error");
     }
-    res.redirect('/login');
+    res.redirect('/');
   });
 });
 
@@ -72,12 +73,8 @@ app.get('/dashboard', (req, res) => {
   if (req.isAuthenticated()) {
     res.send(`Welcome, ${req.user.username}!`);
   } else {
-    res.redirect('/login');
+    res.redirect('/');
   }
-});
-
-app.get('/', (req, res) => {
-  res.redirect('/login');
 });
 
 app.get('/signup', (req, res) => {
